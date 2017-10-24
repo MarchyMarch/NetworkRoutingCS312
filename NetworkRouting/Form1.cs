@@ -163,6 +163,84 @@ namespace NetworkRouting
         private void solveButton_Clicked()
         {
             // *** Implement this method, use the variables "startNodeIndex" and "stopNodeIndex" as the indices for your start and stop points, respectively ***
+
+            
+        }
+
+        //-----------------------------------------------------------------------------//
+        //-------------------------- Dijkstra's Algorithm -----------------------------//
+        //-----------------------------------------------------------------------------//
+
+        private List<int> dijkstrasAlgorithm(PriorityQueue queue, bool isArray)
+        {
+            queue.makeQueue(points.Count);
+
+            List<int> previous = new List<int>();
+            List<double> distances = new List<double>();
+
+            for(int i = 0; i < points.Count; i++)
+            {
+                previous.Add(-1);
+                distances.Add(double.MaxValue);
+            }
+
+            distances[startNodeIndex] = 0;
+
+            if(isArray)
+            {
+                queue.insert(startNodeIndex, 0);
+            }
+            else
+            {
+                queue.insert(ref distances, startNodeIndex);
+            }
+
+            while(!queue.isEmpty())
+            {
+                int minIndex;
+
+                if(isArray)
+                {
+                    minIndex = queue.deleteMin();
+                }
+                else
+                {
+                    minIndex = queue.deleteMin(ref distances);
+                }
+
+                PointF u = points[minIndex];
+
+                foreach(int index in adjacencyList[minIndex])
+                {
+                    PointF alt = points[index];
+                    double altDistance = distances[minIndex] + distanceBetween(u, alt);
+
+                    if(distances[index] > altDistance)
+                    {
+                        previous[index] = minIndex;
+                        distances[index] = altDistance;
+
+                        if(isArray)
+                        {
+                            queue.decreaseKey(index, altDistance);
+                        }
+                        else
+                        {
+                            queue.decreaseKey(ref distances, index);
+                        }
+                    }
+                }
+            }
+
+            return previous;
+        }
+
+        private double distanceBetween(PointF u, PointF v)
+        {
+            double deltaXSqr = Math.Pow(v.X - u.X, 2);
+            double deltaYSqr = Math.Pow(v.Y - u.Y, 2);
+            double distance = Math.Sqrt(deltaXSqr + deltaYSqr);
+            return distance;
         }
 
         private Boolean startStopToggle = true;
