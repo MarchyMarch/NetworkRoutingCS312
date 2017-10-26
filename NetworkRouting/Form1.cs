@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -164,7 +165,34 @@ namespace NetworkRouting
         {
             // *** Implement this method, use the variables "startNodeIndex" and "stopNodeIndex" as the indices for your start and stop points, respectively ***
 
-            
+            PriorityQueue priorityHeap = new HeapPriorityQueue();
+            List<int> heapList = new List<int>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            heapList = dijkstrasAlgorithm(priorityHeap, false);
+            stopwatch.Stop();
+
+            double heapTime = ((double)stopwatch.ElapsedMilliseconds / 1000);
+            heapTimeBox.Text = heapTime.ToString();
+
+            List<int> arrayList = new List<int>();
+
+            if(arrayCheckBox.Checked)
+            {
+                PriorityQueue priorityArray = new ArrayPriorityQueue();
+                stopwatch.Restart();
+                arrayList = dijkstrasAlgorithm(priorityArray, true);
+                stopwatch.Stop();
+
+                double arrayTime = ((double)stopwatch.ElapsedMilliseconds / 1000);
+                arrayTimeBox.Text = arrayTime.ToString();
+                double difference = (arrayTime - heapTime) / heapTime;
+                differenceBox.Text = difference.ToString();
+
+                //drawPath(ref arrayList);
+            }
+
+            drawPath(ref heapList);
         }
 
         //-----------------------------------------------------------------------------//
@@ -215,7 +243,7 @@ namespace NetworkRouting
                     PointF alt = points[index];
                     double altDistance = distances[minIndex] + distanceBetween(u, alt);
 
-                    if(distances[index] > altDistance)
+                    if(altDistance < distances[index])
                     {
                         previous[index] = minIndex;
                         distances[index] = altDistance;
@@ -232,6 +260,8 @@ namespace NetworkRouting
                 }
             }
 
+            queue.printQueue();
+
             return previous;
         }
 
@@ -241,6 +271,55 @@ namespace NetworkRouting
             double deltaYSqr = Math.Pow(v.Y - u.Y, 2);
             double distance = Math.Sqrt(deltaXSqr + deltaYSqr);
             return distance;
+        }
+
+        //-----------------------------------------------------------------------------//
+        //---------------------------- Draw Methods -----------------------------------//
+        //-----------------------------------------------------------------------------//
+
+        private PointF findMidPointOfPoints(int firstIndex, int secondIndex)
+        {
+            PointF midpoint = new PointF();
+
+            midpoint.X = (points[firstIndex].X + points[secondIndex].X) / 2;
+            midpoint.Y = (points[firstIndex].Y + points[secondIndex].Y) / 2;
+
+            return midpoint;
+        }
+
+        private void drawPath(ref List<int> path)
+        {
+            int cur = stopNodeIndex;
+            int previousIndex = cur;
+            double totalPathCost = 0;
+
+            Console.Write("path nodes are: ");
+            foreach(int num in path)
+            {
+                Console.Write(num + ", ");
+            }
+            Console.WriteLine();
+
+            while(true)
+            {
+                cur = path[cur];
+                if (cur == -1) break;
+
+                Pen pen = new Pen(Color.Black, 1);
+                graphics.DrawLine(pen, points[cur], points[previousIndex]);
+
+                double distance = distanceBetween(points[cur], points[previousIndex]);
+                totalPathCost += distance;
+
+                PointF midPoint = findMidPointOfPoints(previousIndex, cur);
+
+                int distanceTruncated = (int)distance;
+                
+                graphics.DrawString(distanceTruncated.ToString(), SystemFonts.DefaultFont, Brushes.Black, midPoint);
+                previousIndex = cur;
+            }
+
+            pathCostBox.Text = totalPathCost.ToString();
         }
 
         private Boolean startStopToggle = true;

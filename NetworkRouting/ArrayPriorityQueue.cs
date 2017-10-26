@@ -34,7 +34,7 @@ namespace NetworkRouting
         public override void printQueue()
         {
             Console.WriteLine("Queue: ");
-            for(int i = 0; i < count; i++)
+            for(int i = 0; i < queue.Length; i++)
             {
                 Console.Write(i + ": " + queue[i] + ", ");
             }
