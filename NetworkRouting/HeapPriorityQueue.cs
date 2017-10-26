@@ -15,11 +15,18 @@ namespace NetworkRouting
 
         public HeapPriorityQueue() { }
 
+        /**
+         * Is empty is time complexity of O(1) because it is a comparison.  There is no space complexity. 
+         **/
         public override bool isEmpty()
         {
             return count == 0;
         }
 
+        /**
+         * This is for debugging purposes and is of time complexity O(|V|) because it itterates through all
+         * the nodes in the distanceHeap array. There is no space complexity.
+         **/
         public override void printQueue()
         {
             Console.Write("Contents of Heap are: ");
@@ -31,6 +38,11 @@ namespace NetworkRouting
             Console.WriteLine();
         }
 
+        /**
+         * Here both time and space complexity is O(|V|). Time is such because it itterates through the
+         * nodes to assign values in increasing number.  Space is of the same order because there are 
+         * two arrays that are allocated to the size V.
+         **/
         public override void makeQueue(int nodeNum)
         {
             distancesHeap = new int[nodeNum + 1];
@@ -48,6 +60,12 @@ namespace NetworkRouting
             lastElement = capacity;
         }
 
+        /**
+         * Time complexity here is O(|logV|) because we  know the minimum node and then we just have to 
+         * bubble up and sort the tree to accomadate for deleting the root. The worse case scenario 
+         * would be the height of the tree which is |logV|.  There is no space complexity because there 
+         * are no new space allocations
+         **/
         public override int deleteMin(ref List<double> distancesArray)
         {
             int minValue = distancesHeap[1];
@@ -86,6 +104,11 @@ namespace NetworkRouting
             return minValue;
         }
 
+        /**
+         * Time complexity is O(|logV|) because it finds the new distance to update, switches it
+         * and then updates the tree like in delete min.  This gives the worse case to be the height
+         * of the tree, |logV|. There is no space complexity because there is no new space allocations.
+         **/
         public override void decreaseKey(ref List<double> distancesArray, int index)
         {
             int heapIndex = pointers[index];
@@ -107,7 +130,12 @@ namespace NetworkRouting
         }
 
 
-
+        /**
+         * Insert has a time complexity of O(|logV|) because it inserts the given node
+         * and updates the tree by bubbling up.  |log V| is the height of the tree so 
+         * that would be the worse case scenario.  There is no space complexity because
+         * there are no new space alloations.
+         **/
         public override void insert(ref List<double> distances, int pointerIndex)
         {
             count++;

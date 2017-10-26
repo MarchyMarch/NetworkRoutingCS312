@@ -12,11 +12,19 @@ namespace NetworkRouting
 
         public ArrayPriorityQueue() { }
 
+        /**
+         * Time Complexity is O(1). There is no space complexity.
+         * */
         public override bool isEmpty()
         {
             return count == 0;
         }
 
+        /**
+         * makeQueue time and space complexity is O(|V|) because it itterates through all the nodes.
+         * it also makes a new array the same size of the number of nodes.
+         * @Param the number of nodes generated
+         * */
         public override void makeQueue(int nodeNum)
         {
             queue = new double[nodeNum];
@@ -30,6 +38,8 @@ namespace NetworkRouting
 
         /**
          * Print queue method for debugging
+         * If it needs to be included because the instructions say so it is of time complexity O(N)
+         * where N is the length of the queue
          **/
         public override void printQueue()
         {
@@ -41,11 +51,19 @@ namespace NetworkRouting
             Console.WriteLine();
         }
 
+        /**
+         * Time Complexity is O(1) because it just puts the key in the queue at the given index.
+         * There is no space complexity.
+         **/
         public override void decreaseKey(int index, double key)
         {
             queue[index] = key;
         }
 
+        /**
+         * The time complexity is O(|V|) because it itterates through all the nodes in the system.
+         * There is no space complexity because there is no new arrays made.
+         **/
         public override int deleteMin()
         {
             double minValue = double.MaxValue;
@@ -65,6 +83,11 @@ namespace NetworkRouting
             return minIndex;
         }
 
+        /**
+         * The time complexity of the insert method is O(1) because it directly inserts into the
+         * array at the given index.  There is no space complexity because there are no new 
+         * allocations.
+         **/
         public override void insert(int index, double value)
         {
             queue[index] = value;

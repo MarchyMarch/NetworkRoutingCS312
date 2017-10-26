@@ -177,6 +177,7 @@ namespace NetworkRouting
 
             List<int> arrayList = new List<int>();
 
+            // Runs the array priority queue if it is selected
             if(arrayCheckBox.Checked)
             {
                 PriorityQueue priorityArray = new ArrayPriorityQueue();
@@ -192,6 +193,7 @@ namespace NetworkRouting
                 //drawPath(ref arrayList);
             }
 
+            // Prints out heap implementation because the heap is used by default
             drawPath(ref heapList);
         }
 
@@ -206,14 +208,18 @@ namespace NetworkRouting
             List<int> previous = new List<int>();
             List<double> distances = new List<double>();
 
+            // Sets all distance values to "infinity"
+            // sets previous as 'undefined'
             for(int i = 0; i < points.Count; i++)
             {
                 previous.Add(-1);
                 distances.Add(double.MaxValue);
             }
 
+            // distance to start node
             distances[startNodeIndex] = 0;
 
+            // checks which priority queue will be used
             if(isArray)
             {
                 queue.insert(startNodeIndex, 0);
@@ -223,6 +229,7 @@ namespace NetworkRouting
                 queue.insert(ref distances, startNodeIndex);
             }
 
+            // main loop
             while(!queue.isEmpty())
             {
                 int minIndex;
@@ -238,6 +245,7 @@ namespace NetworkRouting
 
                 PointF u = points[minIndex];
 
+                // finds the best path amongst its neighbors
                 foreach(int index in adjacencyList[minIndex])
                 {
                     PointF alt = points[index];
@@ -260,10 +268,13 @@ namespace NetworkRouting
                 }
             }
 
-            queue.printQueue();
+            //queue.printQueue();
 
+            // gives the path of the nodes
             return previous;
         }
+
+        //--------------------------- Helper Method -----------------------------------//
 
         private double distanceBetween(PointF u, PointF v)
         {
@@ -287,6 +298,7 @@ namespace NetworkRouting
             return midpoint;
         }
 
+        // draws the shortest path
         private void drawPath(ref List<int> path)
         {
             int cur = stopNodeIndex;
