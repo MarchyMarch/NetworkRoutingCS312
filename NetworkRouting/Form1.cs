@@ -201,6 +201,16 @@ namespace NetworkRouting
         //-------------------------- Dijkstra's Algorithm -----------------------------//
         //-----------------------------------------------------------------------------//
 
+
+        /**
+         * This Dijkstra's is implemented based off of the pseudocode found in the text.
+         * Time complexity for the Binary Heap Priority queue is O(|V| * |logV|)
+         * because the implementation requires all the nodes to be visited but the 
+         * update methods require |log V| time.  The array priority queue is O(|V|^2) 
+         * because it has to visit all the nodes on implementation and has to itterate 
+         * through the nodes in order to delete and update the queue.  The space complexity
+         * for both is O(|V|) because each queue stores all of the nodes generated
+         **/
         private List<int> dijkstrasAlgorithm(PriorityQueue queue, bool isArray)
         {
             queue.makeQueue(points.Count);
@@ -230,6 +240,7 @@ namespace NetworkRouting
             }
 
             // main loop
+            // loops until there arent any nodes with a permanent distance to the end node
             while(!queue.isEmpty())
             {
                 int minIndex;
@@ -245,7 +256,7 @@ namespace NetworkRouting
 
                 PointF u = points[minIndex];
 
-                // finds the best path amongst its neighbors
+                // finds the best path amongst its neighbors, if it exists
                 foreach(int index in adjacencyList[minIndex])
                 {
                     PointF alt = points[index];
